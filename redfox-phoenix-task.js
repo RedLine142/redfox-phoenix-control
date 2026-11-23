@@ -16,7 +16,7 @@
   }
 
   function textOf(node) {
-    return node ? (node.textContent || '').replace(/\\s+/g, ' ').trim() : '';
+    return node ? (node.textContent || '').replace(/\s+/g, ' ').trim() : '';
   }
 
   function installStyles() {
@@ -175,7 +175,7 @@
     var codeCount = textOf(container.querySelector('.location-codes')) || 'ДАННЫЕ УРОВНЯ';
     var codeChip = document.createElement('span');
     codeChip.className = 'rf-chip';
-    codeChip.textContent = codeCount.replace(/\\s+/g, ' ').slice(0, 90);
+    codeChip.textContent = codeCount.replace(/\s+/g, ' ').slice(0, 90);
     root.querySelector('.rf-banner-meta').appendChild(codeChip);
 
     window.RedFoxPhoenixTask = {
