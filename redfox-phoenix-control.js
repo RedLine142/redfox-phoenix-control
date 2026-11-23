@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var VERSION = '0.1.0';
+  var VERSION = '0.2.0';
   var ROOT_ID = 'rf-phoenix-control';
   var STYLE_ID = 'rf-phoenix-control-style';
 
@@ -123,7 +123,24 @@
 
     var team = clean(container.querySelector('.team_name')).replace(/^Команда:\s*/i, '');
     var gameTitle = clean(container.querySelector('h1')) || 'ОБЪЕКТ ФЕНИКС';
+    var sectorOrder = [
+      'ВНЕШНИЙ ПЕРИМЕТР',
+      'АДМИНИСТРАТИВНЫЙ СЕКТОР',
+      'НАУЧНЫЙ СЕКТОР',
+      'ТЕХНИЧЕСКИЙ СЕКТОР',
+      'ЗОНА КАТАСТРОФЫ',
+      'СЕКРЕТНЫЙ УРОВЕНЬ',
+      'ФИНАЛ'
+    ];
     var tasks = originalItems.map(readTask);
+    tasks.sort(function (a, b) {
+      var ai = sectorOrder.indexOf(a.title.toLocaleUpperCase('ru-RU'));
+      var bi = sectorOrder.indexOf(b.title.toLocaleUpperCase('ru-RU'));
+      if (ai < 0) ai = sectorOrder.length + a.index;
+      if (bi < 0) bi = sectorOrder.length + b.index;
+      return ai - bi;
+    });
+    tasks.forEach(function (task, index) { task.index = index; });
     var doneCount = tasks.filter(function (t) { return t.done; }).length;
     var foundCount = tasks.reduce(function (sum, t) { return sum + t.found; }, 0);
     var codeCount = tasks.reduce(function (sum, t) { return sum + t.total; }, 0);
