@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.0.1';
   var ROOT_ID = 'rf-phoenix-task';
   var STYLE_ID = 'rf-phoenix-task-style';
 
@@ -121,8 +121,27 @@
   #${ROOT_ID} .container-location{padding:0 12px 14px!important}
   #${ROOT_ID} h1{margin:0 -12px 12px!important;padding:13px 12px}
   #${ROOT_ID} .tabcontent{padding:14px}
-  #${ROOT_ID} .non-fixed-input{flex-direction:column}
-  #${ROOT_ID} form.enter button{height:42px}
+  #${ROOT_ID} .fixed-top{
+    position:relative!important;display:block!important;height:auto!important;
+    min-height:0!important;margin:0 0 12px!important;padding:12px 10px!important;
+    overflow:visible!important;clear:both!important
+  }
+  #${ROOT_ID} .fixed-top .wrapper,
+  #${ROOT_ID} form.enter,
+  #${ROOT_ID} .non-fixed-input{
+    position:static!important;display:block!important;width:100%!important;
+    height:auto!important;min-height:0!important;margin:0!important;
+    padding:0!important;overflow:visible!important;transform:none!important
+  }
+  #${ROOT_ID} form.enter input[type=text]{
+    display:block!important;position:static!important;width:100%!important;
+    max-width:none!important;height:42px!important;margin:0 0 10px!important
+  }
+  #${ROOT_ID} form.enter button{
+    display:block!important;position:static!important;inset:auto!important;
+    float:none!important;width:100%!important;min-width:0!important;
+    height:42px!important;margin:0!important;transform:none!important
+  }
   #${ROOT_ID} .tabs{padding:0 8px 9px!important}
   #${ROOT_ID} .tabs>.wrapper{gap:5px}
   #${ROOT_ID} .tabs .tab{flex:1 1 calc(50% - 5px);padding:11px 6px!important;font-size:9px!important}
