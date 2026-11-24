@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var VERSION = '0.3.0';
+  var VERSION = '0.4.0';
   var ROOT_ID = 'rf-phoenix-control';
   var STYLE_ID = 'rf-phoenix-control-style';
 
@@ -94,6 +94,7 @@
 #${ROOT_ID} .sector-hit:focus-visible polygon{stroke-width:7}
 #${ROOT_ID} .map-tooltip{position:absolute;z-index:5;display:none;width:min(260px,calc(100% - 20px));padding:13px 14px;background:rgba(7,13,10,.97);border:1px solid var(--tip-color,#91b77b);border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.65);color:#eaf2e8;line-height:1.35;pointer-events:none;transform:translate(-50%,-108%)}
 #${ROOT_ID} .map-tooltip.show{display:block}
+#${ROOT_ID} .map-tooltip{transform:none;max-width:calc(100% - 16px)}
 #${ROOT_ID} .tip-kicker{font-size:9px;letter-spacing:1.8px;color:var(--tip-color,#a7c18c);text-transform:uppercase;margin-bottom:5px}
 #${ROOT_ID} .tip-title{font-size:13px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;margin-bottom:9px}
 #${ROOT_ID} .tip-stats{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#b8c8b9}
@@ -168,7 +169,7 @@
     installStyles();
     var root = document.createElement('section');
     root.id = ROOT_ID;
-    root.innerHTML = '<div class="shell"><header class="top"><div class="kicker">RESTRICTED AREA // PHOENIX PROJECT</div><div class="title">PHOENIX // CONTROL</div><div class="subtitle">Центр оперативного управления секретным объектом</div><div class="meta"><span class="chip">ОПЕРАЦИЯ: <strong class="game"></strong></span><span class="chip">ГРУППА: <strong class="team"></strong></span><span class="chip">СЕКТОРОВ: <strong class="total"></strong></span></div><div class="timer"><div><div class="timer-label">Время до завершения операции</div><div class="time-left" id="rf-time-left">ЗАГРУЗКА...</div></div><div class="clock">ЛОКАЛЬНОЕ ВРЕМЯ <span id="rf-clock">--:--:--</span></div></div></header><main class="body"><div class="section-head"><div class="section-title">Схема комплекса</div><div class="section-note">Выберите сектор для входа</div></div><div class="map"><img class="map-image" src="https://kemerovo.redfoxkrsk.ru/static/up/images/9a2a9922-885d-4b5e-9553-3b08d8aae779.png" alt="Тактическая схема комплекса ФЕНИКС"><svg class="map-svg" viewBox="0 0 1648 928" preserveAspectRatio="none" role="group" aria-label="Интерактивная карта секторов"><g class="sector-layer"></g></svg><div class="map-tooltip" role="status"><div class="tip-kicker">PHOENIX // SECTOR DATA</div><div class="tip-title"></div><div class="tip-stats"><span class="tip-count"></span><strong class="tip-percent"></strong></div><div class="tip-bar"><span></span></div><div class="tip-status"></div></div></div><div class="caption"><span>PHOENIX FACILITY // FLOOR PLAN</span><span class="map-count"></span></div></main><footer class="footer"><span>PHOENIX SYSTEM // INTERNAL USE ONLY</span><span class="summary"></span></footer></div>';
+    root.innerHTML = '<div class="shell"><header class="top"><div class="kicker">RESTRICTED AREA // PHOENIX PROJECT</div><div class="title">PHOENIX // CONTROL</div><div class="subtitle">Центр оперативного управления секретным объектом</div><div class="meta"><span class="chip">ОПЕРАЦИЯ: <strong class="game"></strong></span><span class="chip">ГРУППА: <strong class="team"></strong></span><span class="chip">СЕКТОРОВ: <strong class="total"></strong></span></div><div class="timer"><div><div class="timer-label">Время до завершения операции</div><div class="time-left" id="rf-time-left">ЗАГРУЗКА...</div></div><div class="clock">ЛОКАЛЬНОЕ ВРЕМЯ <span id="rf-clock">--:--:--</span></div></div></header><main class="body"><div class="section-head"><div class="section-title">Схема комплекса</div><div class="section-note">Выберите сектор для входа</div></div><div class="map"><img class="map-image" src="https://kemerovo.redfoxkrsk.ru/static/up/images/9a2a9922-885d-4b5e-9553-3b08d8aae779.png" alt="Тактическая схема комплекса ФЕНИКС"><svg class="map-svg" viewBox="0 0 1672 941" preserveAspectRatio="none" role="group" aria-label="Интерактивная карта секторов"><g class="sector-layer"></g></svg><div class="map-tooltip" role="status"><div class="tip-kicker">PHOENIX // SECTOR DATA</div><div class="tip-title"></div><div class="tip-stats"><span class="tip-count"></span><strong class="tip-percent"></strong></div><div class="tip-bar"><span></span></div><div class="tip-status"></div></div></div><div class="caption"><span>PHOENIX FACILITY // FLOOR PLAN</span><span class="map-count"></span></div></main><footer class="footer"><span>PHOENIX SYSTEM // INTERNAL USE ONLY</span><span class="summary"></span></footer></div>';
 
     root.querySelector('.game').textContent = gameTitle;
     root.querySelector('.team').textContent = team || 'ОПЕРАТИВНАЯ ГРУППА';
@@ -184,13 +185,13 @@
     var tipBar = tooltip.querySelector('.tip-bar span');
     var tipStatus = tooltip.querySelector('.tip-status');
     var shapes = [
-      {color:'#ff3434',fill:'rgba(255,45,45,.28)',points:'45,185 130,165 245,180 275,330 300,410 260,665 190,700 105,625 65,515 55,330'},
-      {color:'#ffb52e',fill:'rgba(255,181,46,.25)',points:'270,105 690,105 725,145 710,285 650,365 280,365 245,320 250,160'},
-      {color:'#35c9ff',fill:'rgba(53,201,255,.24)',points:'810,105 1200,105 1300,125 1340,185 1335,335 1280,360 910,355 800,280 800,160'},
-      {color:'#b5ef36',fill:'rgba(181,239,54,.23)',points:'280,420 410,395 565,405 700,455 710,675 675,720 300,720 250,660 250,490'},
-      {color:'#ff3434',fill:'rgba(255,45,45,.28)',points:'790,430 930,420 1095,420 1200,480 1200,610 1130,630 1100,700 835,715 785,655'},
-      {color:'#c56bff',fill:'rgba(197,107,255,.25)',points:'1005,650 1100,625 1375,625 1400,675 1390,805 1320,830 1030,815 990,770'},
-      {color:'#ffb52e',fill:'rgba(255,181,46,.25)',points:'1375,480 1545,480 1595,525 1605,680 1550,735 1390,720 1350,665 1355,545'}
+      {color:'#ff3434',fill:'rgba(255,45,45,.28)',points:'92,205 124,170 214,126 269,181 272,319 329,365 329,653 258,711 192,685 128,622 112,500 92,468 92,264'},
+      {color:'#ffb52e',fill:'rgba(255,181,46,.25)',points:'273,154 331,119 680,116 704,151 702,286 667,321 602,321 564,365 334,365 274,320 271,185'},
+      {color:'#35c9ff',fill:'rgba(53,201,255,.24)',points:'816,118 1197,118 1265,155 1323,195 1323,324 1284,345 907,345 815,270'},
+      {color:'#b5ef36',fill:'rgba(181,239,54,.23)',points:'412,414 560,414 613,445 696,482 700,676 676,713 322,713 283,671 283,518 330,464 412,454'},
+      {color:'#ff3434',fill:'rgba(255,45,45,.28)',points:'908,425 1094,425 1198,483 1198,583 1145,610 1072,610 1000,713 835,713 790,672 790,516'},
+      {color:'#c56bff',fill:'rgba(197,107,255,.25)',points:'1007,645 1060,644 1091,615 1256,615 1314,647 1375,673 1375,792 1324,816 1035,816 1000,781 1000,670'},
+      {color:'#ffb52e',fill:'rgba(255,181,46,.25)',points:'1375,495 1428,464 1528,464 1584,516 1584,681 1538,729 1420,729 1364,681 1364,545'}
     ];
     function showTip(task, shape, center) {
       tipTitle.textContent = task.title;
@@ -199,9 +200,20 @@
       tipBar.style.width = task.percent + '%';
       tipStatus.textContent = task.done ? 'СТАТУС: СЕКТОР ЗАВЕРШЁН' : (task.found ? 'СТАТУС: ОПЕРАЦИЯ В РАБОТЕ' : 'СТАТУС: ОЖИДАНИЕ ДОСТУПА');
       tooltip.style.setProperty('--tip-color', shape.color);
-      tooltip.style.left = (center.x / 1648 * 100) + '%';
-      tooltip.style.top = (center.y / 928 * 100) + '%';
       tooltip.classList.add('show');
+      tooltip.style.left = '0px';
+      tooltip.style.top = '0px';
+      var mapRect = mapBox.getBoundingClientRect();
+      var tipRect = tooltip.getBoundingClientRect();
+      var anchorX = center.x / 1672 * mapRect.width;
+      var anchorY = center.y / 941 * mapRect.height;
+      var left = Math.max(8, Math.min(mapRect.width - tipRect.width - 8, anchorX - tipRect.width / 2));
+      var top = anchorY - tipRect.height - 16;
+      if (top < 8) top = anchorY + 16;
+      top = Math.max(8, Math.min(mapRect.height - tipRect.height - 8, top));
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+      tooltip.style.transform = 'none';
     }
     function hideTip() { tooltip.classList.remove('show'); }
     tasks.forEach(function (task, index) {
