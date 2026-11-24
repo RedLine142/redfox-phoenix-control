@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var VERSION = '0.5.0';
+  var VERSION = '0.6.0';
   var ROOT_ID = 'rf-phoenix-control';
   var STYLE_ID = 'rf-phoenix-control-style';
 
@@ -182,6 +182,7 @@
     var tipTitle = tooltip.querySelector('.tip-title');
     var tipPercent = tooltip.querySelector('.tip-percent');
     var tipBar = tooltip.querySelector('.tip-bar span');
+    var mapBox = root.querySelector('.map');
     var shapes = [
       {color:'#ff3434',fill:'rgba(255,45,45,.28)',points:'92,205 124,170 214,126 269,181 272,319 329,365 329,653 258,711 192,685 128,622 112,500 92,468 92,264'},
       {color:'#ffb52e',fill:'rgba(255,181,46,.25)',points:'273,154 331,119 680,116 704,151 702,286 667,321 602,321 564,365 334,365 274,320 271,185'},
@@ -191,7 +192,7 @@
       {color:'#c56bff',fill:'rgba(197,107,255,.25)',points:'1007,645 1060,644 1091,615 1256,615 1314,647 1375,673 1375,792 1324,816 1035,816 1000,781 1000,670'},
       {color:'#ffb52e',fill:'rgba(255,181,46,.25)',points:'1375,495 1428,464 1528,464 1584,516 1584,681 1538,729 1420,729 1364,681 1364,545'}
     ];
-    function showTip(task, shape, center) {
+    function showTip(task, shape, anchor, bounds) {
       tipTitle.textContent = task.title;
       tipPercent.textContent = Math.round(task.percent) + '%';
       tipBar.style.width = task.percent + '%';
@@ -199,17 +200,29 @@
       tooltip.classList.add('show');
       tooltip.style.left = '0px';
       tooltip.style.top = '0px';
+
       var mapRect = mapBox.getBoundingClientRect();
       var tipRect = tooltip.getBoundingClientRect();
-      var anchorX = center.x / 1672 * mapRect.width;
-      var anchorY = center.y / 941 * mapRect.height;
-      var gap = 14;
-      var left = anchorX < mapRect.width / 2
-        ? anchorX + gap
-        : anchorX - tipRect.width - gap;
-      left = Math.max(8, Math.min(mapRect.width - tipRect.width - 8, left));
+      var scaleX = mapRect.width / 1672;
+      var scaleY = mapRect.height / 941;
+      var leftEdge = bounds.minX * scaleX;
+      var rightEdge = bounds.maxX * scaleX;
+      var anchorY = anchor.y * scaleY;
+      var gap = 12;
+      var margin = 8;
+
+      var left;
+      if (mapRect.width - rightEdge >= tipRect.width + gap + margin) {
+        left = rightEdge + gap;
+      } else if (leftEdge >= tipRect.width + gap + margin) {
+        left = leftEdge - tipRect.width - gap;
+      } else {
+        left = Math.max(margin, Math.min(mapRect.width - tipRect.width - margin, anchor.x * scaleX - tipRect.width / 2));
+      }
+
       var top = anchorY - tipRect.height / 2;
-      top = Math.max(8, Math.min(mapRect.height - tipRect.height - 8, top));
+      top = Math.max(margin, Math.min(mapRect.height - tipRect.height - margin, top));
+
       tooltip.style.left = left + 'px';
       tooltip.style.top = top + 'px';
       tooltip.style.transform = 'none';
@@ -229,13 +242,22 @@
       polygon.setAttribute('points', shape.points);
       link.appendChild(polygon);
       var coords = shape.points.split(' ').map(function (pair) { return pair.split(',').map(Number); });
-      var center = coords.reduce(function (sum, p) { sum.x += p[0]; sum.y += p[1]; return sum; }, {x:0,y:0});
-      center.x /= coords.length; center.y /= coords.length;
-      link.addEventListener('mouseenter', function () { showTip(task, shape, center); });
-      link.addEventListener('focus', function () { showTip(task, shape, center); });
+      var bounds = coords.reduce(function (box, p) {
+        box.minX = Math.min(box.minX, p[0]);
+        box.maxX = Math.max(box.maxX, p[0]);
+        box.minY = Math.min(box.minY, p[1]);
+        box.maxY = Math.max(box.maxY, p[1]);
+        return box;
+      }, {minX:Infinity,maxX:-Infinity,minY:Infinity,maxY:-Infinity});
+      var anchor = {
+        x: (bounds.minX + bounds.maxX) / 2,
+        y: (bounds.minY + bounds.maxY) / 2
+      };
+      link.addEventListener('mouseenter', function () { showTip(task, shape, anchor, bounds); });
+      link.addEventListener('focus', function () { showTip(task, shape, anchor, bounds); });
       link.addEventListener('mouseleave', hideTip);
       link.addEventListener('blur', hideTip);
-      link.addEventListener('touchstart', function () { showTip(task, shape, center); }, {passive:true});
+      link.addEventListener('touchstart', function () { showTip(task, shape, anchor, bounds); }, {passive:true});
       layer.appendChild(link);
     });
 
